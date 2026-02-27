@@ -40,7 +40,7 @@ import logging
 from fastapi import HTTPException
 from models import ClienteInput, PrediccionOutput
 
-MLFLOW_TRACKING_URI = "http://32.192.36.226:5000"
+MLFLOW_TRACKING_URI = "http://44.211.88.225:5000"
 MODEL_NAME          = "GermanCreditRisk-XGBoost"
 MODEL_ALIAS         = "production"
 mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
