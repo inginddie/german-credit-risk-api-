@@ -54,3 +54,9 @@ Thumbs.db
 
 # Environment variables
 .env
+
+# Data files
+*.csv
+*.json
+!requirements.txt
+!package.json

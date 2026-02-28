@@ -1,131 +1,116 @@
-# German Credit Risk API
+# MLOps - APIs de Machine Learning
 
-API REST para predicción de riesgo crediticio utilizando Machine Learning, desarrollada con FastAPI y MLflow.
+Repositorio de proyectos de MLOps con APIs de predicción usando FastAPI y MLflow.
 
-## 📋 Descripción
+## 📁 Estructura del Proyecto
 
-Este proyecto implementa una API de producción para evaluar el riesgo crediticio de clientes basándose en el dataset German Credit Risk. Utiliza un modelo XGBoost entrenado y gestionado con MLflow, desplegado a través de una API RESTful construida con FastAPI.
-
-## 🏗️ Arquitectura
-
-El proyecto está modularizado en tres componentes principales:
-
-- **models.py**: Define los esquemas de entrada y salida usando Pydantic
-- **predict_logic.py**: Contiene la lógica de carga del modelo de MLflow y predicción
-- **main.py**: Define los endpoints de la API con FastAPI
-
-## 🚀 Características
-
-- ✅ Predicción individual de riesgo crediticio
-- ✅ Predicción por lote (batch)
-- ✅ Validación automática de datos de entrada
-- ✅ Logging estructurado
-- ✅ Manejo robusto de errores
-- ✅ Documentación automática (Swagger/OpenAPI)
-- ✅ Pruebas automáticas con pytest
-- ✅ CORS habilitado para acceso desde cualquier origen
-
-## 📦 Endpoints
-
-### `GET /`
-Información básica de la API y estado del modelo
-
-### `GET /health`
-Verificación del estado de salud de la API
-
-### `POST /predict`
-Predicción individual de riesgo crediticio
-
-**Parámetros de entrada:**
-- Age: Edad del cliente (18-100)
-- Sex: Sexo (0: Femenino, 1: Masculino)
-- Job: Tipo de trabajo (0-3)
-- Housing: Situación de vivienda (0-2)
-- Saving_accounts: Cuentas de ahorro (0-4)
-- Checking_account: Cuenta corriente (0-3)
-- Credit_amount: Monto del crédito (>0)
-- Duration: Duración en meses (>0)
-- Purpose: Propósito del crédito (0-7)
-
-**Respuesta:**
-```json
-{
-  "risk": "good",
-  "probability_good": 0.8523,
-  "probability_bad": 0.1477,
-  "recommendation": "Aprobar credito — bajo riesgo"
-}
+```
+MlOps/
+├── GermanCreditRiskAPI/       # API de predicción de riesgo crediticio
+├── JiraTimePredictionAPI/     # API de predicción de tiempo de desarrollo
+├── app.py                     # Archivo original (legacy)
+├── mlops.ipynb               # Notebooks de experimentación
+└── README.md                  # Este archivo
 ```
 
-### `POST /predict/batch`
-Predicción por lote para múltiples clientes
+## 🚀 Proyectos
 
-## 🛠️ Instalación
+### 1. German Credit Risk API
+
+API REST para predicción de riesgo crediticio de clientes.
+
+**Características:**
+- Modelo: XGBoost
+- Dataset: German Credit Risk
+- Puerto: 8000
+- Endpoints: `/predict`, `/predict/batch`
+
+**Documentación completa**: [GermanCreditRiskAPI/README.md](GermanCreditRiskAPI/README.md)
+
+**Ejecutar:**
+```bash
+cd GermanCreditRiskAPI
+python main.py
+```
+
+### 2. Jira Time Prediction API
+
+API REST para predicción de tiempo de desarrollo de issues de Jira.
+
+**Características:**
+- Modelo: XGBoost (seleccionado tras experimentar con 14 modelos)
+- Dataset: 10,024 issues de Jira (ADP, TRX, EFI)
+- Puerto: 8001
+- Endpoints: `/predict/time`, `/predict/time/batch`
+- MAE: 441.64 horas (~18.4 días)
+
+**Documentación completa**: [JiraTimePredictionAPI/README.md](JiraTimePredictionAPI/README.md)
+
+**Ejecutar:**
+```bash
+cd JiraTimePredictionAPI
+python jira_api.py
+```
+
+## 🛠️ Instalación General
 
 1. Crear y activar un entorno virtual:
 ```bash
 python -m venv .venv
 .venv\Scripts\Activate.ps1  # Windows
+source .venv/bin/activate   # Linux/Mac
 ```
 
 2. Instalar dependencias:
 ```bash
-pip install fastapi uvicorn pydantic mlflow pandas scikit-learn xgboost
+pip install -r requirements.txt
 ```
 
-3. Para desarrollo y testing:
-```bash
-pip install pytest httpx
-```
+## 🔧 Configuración MLflow
 
-## ▶️ Ejecución
+Ambos proyectos usan MLflow para gestión de modelos:
 
-```bash
-python main.py
-```
+**Servidor MLflow**: http://44.211.88.225:5000
 
-La API estará disponible en: `http://localhost:8000`
-
-Documentación interactiva: `http://localhost:8000/docs`
-
-## 🧪 Pruebas
-
-Ejecutar las pruebas automáticas:
-
-```bash
-pytest --maxfail=1 --disable-warnings -v
-```
-
-## 🔧 Configuración
-
-El modelo se carga desde un servidor MLflow configurado en `predict_logic.py`:
-
-```python
-MLFLOW_TRACKING_URI = "http://32.192.36.226:5000"
-MODEL_NAME = "GermanCreditRisk-XGBoost"
-MODEL_ALIAS = "production"
-```
-
-## 📊 Lógica de Recomendación
-
-- **Probabilidad ≥ 75%**: Aprobar crédito — bajo riesgo
-- **Probabilidad ≥ 50%**: Revisar manualmente — riesgo moderado
-- **Probabilidad < 50%**: Rechazar crédito — alto riesgo
+Cada proyecto tiene su propio modelo registrado:
+- **GermanCreditRisk-XGBoost** (German Credit Risk API)
+- **JiraTimePrediction** (Jira Time Prediction API)
 
 ## 🏆 Buenas Prácticas Implementadas
 
-- ✅ Separación de responsabilidades (modelos, lógica, endpoints)
+- ✅ Separación de proyectos por dominio
+- ✅ Código modularizado (modelos, lógica, endpoints)
 - ✅ Validación de datos con Pydantic
-- ✅ Logging estructurado en lugar de print
-- ✅ Manejo diferenciado de errores (503 para modelo no disponible, 500 para errores internos)
-- ✅ Documentación automática con OpenAPI
-- ✅ Código testeable y modular
+- ✅ Logging estructurado
+- ✅ Manejo robusto de errores
+- ✅ Documentación automática con OpenAPI/Swagger
+- ✅ Experimentación sistemática de modelos en MLflow
+- ✅ Pruebas automáticas con pytest
 - ✅ Type hints en Python
+- ✅ Gestión de modelos con MLflow Model Registry
 
-## 📝 Licencia
+## 📊 MLflow UI
 
-Proyecto académico - Maestría en IA USA
+Accede a la interfaz de MLflow para:
+- Ver experimentos y métricas
+- Comparar modelos
+- Gestionar versiones de modelos
+- Asignar alias (staging, production)
+
+**URL**: http://44.211.88.225:5000
+
+## 📝 Workflow MLOps
+
+1. **Preparación de datos** - Análisis exploratorio y limpieza
+2. **Experimentación** - Probar múltiples modelos y configuraciones
+3. **Registro en MLflow** - Tracking de métricas y parámetros
+4. **Selección de modelo** - Comparar y elegir el mejor
+5. **Promoción a producción** - Asignar alias 'production'
+6. **Deployment** - Servir modelo via API REST
+7. **Monitoreo** - Health checks y logging
 
 ## 👥 Autor
 
-Desarrollado como parte de un proyecto de MLOps
+Desarrollado como parte de un proyecto de MLOps - Maestría en IA USA
+
+**GitHub**: https://github.com/inginddie/german-credit-risk-api-
